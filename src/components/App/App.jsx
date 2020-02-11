@@ -6,8 +6,8 @@ import FilterButtons from '../FilterButtons';
 import Header from '../Header';
 import ToDoList from '../ToDoList';
 import AddTaskForm from '../AddTaskForm';
-import 'typeface-roboto';
 import './App.css';
+import '../../fonts/fonts.css';
 
 const mapStateToProps = (state) => {
   const { toDoList } = state;
