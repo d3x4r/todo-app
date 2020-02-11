@@ -1,7 +1,11 @@
 import React from 'react';
+import { connect } from 'react-redux';
+import { setSearchValue } from '../../actions';
 import InputBase from '@material-ui/core/InputBase';
 import SearchIcon from '@material-ui/icons/Search';
 import { fade, makeStyles } from '@material-ui/core/styles';
+
+const mapDispatchToProps = { setSearchValue };
 
 const useStyles = makeStyles(theme => ({
   search: {
@@ -44,7 +48,11 @@ const useStyles = makeStyles(theme => ({
 }));
 
 const SearchPanel = (props) => {
-  const { onSearchInput } = props;
+  const { setSearchValue } = props;
+
+  const onSearchInput = ({ target: { value } }) => {
+    setSearchValue(value);
+  }
   const classes = useStyles();
   return (
     <div className={classes.search}>
@@ -64,4 +72,4 @@ const SearchPanel = (props) => {
   );
 };
 
-export default SearchPanel;
+export default connect(undefined, mapDispatchToProps)(SearchPanel);

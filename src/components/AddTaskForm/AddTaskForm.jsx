@@ -1,7 +1,11 @@
 import React, { useState } from 'react';
+import { connect } from 'react-redux';
+
 import { makeStyles } from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
+
+import { taskAdd } from '../../actions';
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -16,8 +20,10 @@ const useStyles = makeStyles(theme => ({
 
 }));
 
+const mapDispatchToProps = { taskAdd };
+
 const AddTaskForm = (props) => {
-  const { onTaskAdd } = props;
+  const { taskAdd } = props;
   const [currentText, setTaskText] = useState('');
   const [valid, setValidState] = useState(false);
   const classes = useStyles();
@@ -33,9 +39,8 @@ const AddTaskForm = (props) => {
       setValidState(true);
       return;
     }
-    setValidState(false);
-    onTaskAdd(currentText);
-    setTaskText('');
+    setValidState(false);    setTaskText('');
+    taskAdd(currentText);
   }
 
   return (
@@ -60,4 +65,4 @@ const AddTaskForm = (props) => {
   );
 };
 
-export default AddTaskForm;
+export default connect(undefined, mapDispatchToProps)(AddTaskForm);

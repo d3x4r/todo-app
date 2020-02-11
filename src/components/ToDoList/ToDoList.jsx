@@ -1,28 +1,35 @@
-// import React from 'react';
-
-// import ToDoItem from '../ToDoItem';
-
-// const ToDoList = (props) => {
-//     const { todos } = props;
-//     return (
-//         <ul>
-//             {todos.map((props) => {
-//               const { id, ...data } = props;
-//               return <ToDoItem key={id} { ...data } />;
-//             })}
-//         </ul>
-//     );
-// };
-
-// export default ToDoList;
-
 import React from 'react';
-
-import ToDoItem from '../ToDoItem';
-
+import { connect } from 'react-redux';
 
 import { makeStyles } from '@material-ui/core/styles';
 import List from '@material-ui/core/List';
+import ToDoItem from '../ToDoItem';
+
+const getFilteredTasks = (tasksList, filterName) => {
+  switch(filterName) {
+    case('active'):
+      return tasksList.filter(({ done }) => done === false);
+    case('done'):
+      return tasksList.filter(({ done }) => done === true);
+    default:
+      return tasksList;
+  }
+}
+
+const mapStateToProps = (state) => {
+  const { currentFilter, searchValue, toDoList } = state;
+  const filteredTasks = getFilteredTasks(toDoList, currentFilter);
+
+  if (!searchValue) {
+    return ({
+      toDoList: filteredTasks
+    });
+  }
+
+  return ({
+    toDoList: filteredTasks.filter(({ text }) => text.toLocaleLowerCase().includes(searchValue) )
+  });
+};
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -34,19 +41,19 @@ const useStyles = makeStyles(theme => ({
 }));
 
 const ToDoList = (props) => {
-  const { todos, onTaskDelete, onTaskStateToggle } = props;
+  const { toDoList } = props;
   const classes = useStyles();
 
   return (
     <div className={classes.root}>
       <List component="ul" aria-label="to do list">
-      {todos.map((currentTask) => {
+      {toDoList.map((currentTask) => {
           const { id } = currentTask;
-          return <ToDoItem key={id} { ...currentTask } onTaskDelete={onTaskDelete} onTaskStateToggle={onTaskStateToggle} />;
+          return <ToDoItem key={id} { ...currentTask } />;
         })}
       </List>
     </div>
   );
 }
 
-export default ToDoList;
+export default connect(mapStateToProps)(ToDoList);

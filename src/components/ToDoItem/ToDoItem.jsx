@@ -1,4 +1,6 @@
 import React from 'react';
+import { connect } from 'react-redux';
+import { taskRemove, taskToggleState } from '../../actions';
 
 import { makeStyles } from '@material-ui/core/styles';
 import { green } from '@material-ui/core/colors';
@@ -11,6 +13,8 @@ import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
 import DeleteIcon from '@material-ui/icons/Delete';
 import IconButton from '@material-ui/core/IconButton';
 import Slide from '@material-ui/core/Slide';
+
+const mapDispatchToProps = { taskRemove, taskToggleState };
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -25,28 +29,36 @@ const useStyles = makeStyles(theme => ({
   text: {
     cursor: 'pointer',
     '&:hover': {
-      transition: 'all 0.3s',
+      transition: 'padding-left 0.3s',
       paddingLeft: '10px',
     },
-    transition: 'all 0.3s',
+    transition: 'padding-left 0.3s',
     '&:active': {
       opacity: 0.7,
     },
   }
 }));
 
+const renderIcon = (done) => {
+  return done ? <DoneIcon /> : <ActiveIcon style={{ color: green[500] }} /> ;
+};
+
 const ToDoItem = (props) => {
-  const { text, done, onTaskDelete, id, onTaskStateToggle } = props;
+  const { text, done, id, taskRemove, taskToggleState } = props;
   const classes = useStyles();
 
-  const renderIcon = () => {
-    return done ? <DoneIcon /> : <ActiveIcon style={{ color: green[500] }} /> ;
-  };
+  const onTaskDelete = (id) => () => {
+    taskRemove(id);
+  }
+
+  const onTaskToggleState = (id) => () => {
+    taskToggleState(id);
+  }
 
   const renderText = () => {
     return done ? <ListItemText
                     className={classes.text}
-                    onClick={onTaskStateToggle(id)}
+                    onClick={onTaskToggleState(id)}
                     style={{ color: 'gray' }}
                     >
                     <s>{text}</s>
@@ -54,17 +66,17 @@ const ToDoItem = (props) => {
                   : 
                   <ListItemText
                     className={classes.text}
-                    onClick={onTaskStateToggle(id)}
+                    onClick={onTaskToggleState(id)}
                     >
                     {text}
                   </ListItemText>;
   };
   
   return (
-    <Slide in={true} mountOnEnter unmountOnExit>
+    <Slide in={true} mountOnEnter>
       <ListItem className={classes.root}>
         <ListItemIcon className={classes.icon}>
-          {renderIcon()}
+          {renderIcon(done)}
         </ListItemIcon>
         {renderText()}
         <ListItemSecondaryAction>
@@ -77,4 +89,4 @@ const ToDoItem = (props) => {
   );
 }
 
-export default ToDoItem;
+export default connect(undefined, mapDispatchToProps)(ToDoItem);

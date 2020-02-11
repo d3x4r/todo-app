@@ -61,9 +61,7 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-
 const Header = (props) => {
-  const { onSearchInput } = props;
   const classes = useStyles();
   return (
     <>
@@ -74,7 +72,7 @@ const Header = (props) => {
             <Typography className={classes.title} variant="h6" noWrap>
               ToDo-App
             </Typography>
-            <SearchPanel onSearchInput={onSearchInput} />
+            <SearchPanel />
           </Toolbar>
         </AppBar>
       </div>
